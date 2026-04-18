@@ -1,0 +1,58 @@
+---
+  - hosts: all
+    become: true
+    pre_tasks:
+    - name: update the packages on Ubuntu
+      apt:
+        upgrade: dist
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+    - name: update the packages on Centos
+      dnf:
+        update_only: yes
+        update_cache: yes
+      when: ansible_distribution == "Amazon"
+
+  - hosts: web
+    become: true
+    tasks:
+    - name: installation of apache2 and php packages on Ubuntu
+      apt:
+        name: 
+          - apache2
+          - libapache2-mod-php
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+
+    - name: installation of apache and php packages on Centos
+      dnf:
+        name: 
+          - httpd
+          - php
+        state: latest
+      when: ansible_distribution == "Amazon"
+
+  - hosts: databases
+    become: true
+    tasks: 
+      - name: Installation of MariaDB server on Centos server
+        dnf: 
+          name: mariadb
+          state: latest
+        when: ansible_distribution == "Amazon"
+
+      - name: Installation of MariaDB server on Ubuntu server
+        apt:
+          name: mariadb-server
+          state: latest
+        when: ansible_distribution == "Ubuntu"
+
+  - hosts: file
+    become: true
+    tasks:
+      - name: installation of file server on Ubuntu
+        package:
+          name: samba
+          state: latest
+        
+          
