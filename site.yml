@@ -36,6 +36,16 @@
         state: latest
       when: ansible_distribution == "Amazon"
 
+    - name: Copying of default.html to web server
+      tags: html,copy
+      copy: 
+        src: default-site.html
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: 0644
+
+
   - hosts: databases
     become: true
     tasks: 
@@ -62,4 +72,21 @@
           name: samba
           state: latest
         
-          
+
+  - hosts: workstation
+    become: true
+    tasks: 
+
+    - name: install unzip 
+      package: 
+        name: unzip
+
+    - name: Install Terraform 
+      unarchive: 
+        src: https://releases.hashicorp.com/terraform/1.5.0/terraform_1.5.0_linux_amd64.zip
+        dest: /usr/local/bin
+        remote_src: yes
+        mode: 0755
+        owner: root
+        group: root
+
