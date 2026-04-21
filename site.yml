@@ -35,6 +35,14 @@
           - php
         state: latest
       when: ansible_distribution == "Amazon"
+    
+    - name: started httpd (Centos)
+      tags: apache2,centos,php
+      service:
+        name: httpd
+        state: started
+        enabled: true
+      when: ansible_distribution == "Amazon"
 
     - name: Copying of default.html to web server
       tags: html,copy
@@ -46,6 +54,22 @@
         mode: 0644
 
 
+    - name: Changing Email in httpd
+      tags: apache2,centos,php
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^ServerAdmin'
+        line: ServerAdmin khan@testing.com
+      when: ansible_distribution == "Amazon"
+      register: httpd
+
+    - name: Restart httpd (Centos)
+      tags: apache2,centos,php
+      service:
+        name: httpd
+        state: restarted
+      when: httpd.changed
+      
   - hosts: databases
     become: true
     tasks: 
