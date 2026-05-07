@@ -1,0 +1,43 @@
+---
+  - hosts: all
+    become: true
+    pre_tasks:
+    - name: update the packages on Ubuntu
+      tags: always
+      apt:
+        update_cache: yes
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+    - name: update the packages on Centos
+      tags: always
+      dnf:
+        update_cache: yes
+      changed_when: false
+      when: ansible_distribution == "Amazon"
+
+        
+  - hosts: all
+    become: true
+    tasks:
+
+    - name: Creating simone users 
+      tags: always
+      user:
+        name: simone
+        groups: root
+
+    - name: Adding ssh for simone
+      tags: always
+      authorized_key:
+        user: simone
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHC+IdhbpFaW19OyTHxyqLHPcIln1KhUd4bmwHoulqaD ansible"
+
+    - name: Add sudoers file for simone
+      tags: always
+      copy:
+        src: sudoer_simone
+        dest: /etc/sudoers.d/simone
+        owner: root
+        group: root
+        mode: 0440
+

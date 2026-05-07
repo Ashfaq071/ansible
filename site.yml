@@ -96,6 +96,15 @@
           name: samba
           state: latest
         
+  - hosts: all
+    become: true
+    tasks:
+
+    - name: Adding ssh for simone
+      tags: always
+      authorized_key:
+        user: simone
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHC+IdhbpFaW19OyTHxyqLHPcIln1KhUd4bmwHoulqaD ansible"
 
   - hosts: workstation
     become: true
