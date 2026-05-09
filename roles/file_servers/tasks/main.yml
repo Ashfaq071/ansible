@@ -1,0 +1,6 @@
+  - name: installation of file server on Ubuntu
+    tags: samba
+    package:
+      name: samba
+      state: latest
+
