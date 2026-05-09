@@ -1,0 +1,14 @@
+  - name: Installation of MariaDB server on Centos server
+    tags: mariadb,centos
+    dnf:
+      name: mariadb
+      state: latest
+    when: ansible_distribution == "Amazon"
+
+
+  - name: Installation of MariaDB server on Ubuntu server
+    tags: mariadb,ubuntu
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
