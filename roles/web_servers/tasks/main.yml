@@ -1,38 +1,19 @@
   - name: installation of apache2 and php packages on Ubuntu
     tags: apache2,ubuntu,php
-    apt:
+    package: 
       name:
-        - apache2
-        - libapache2-mod-php
+        - "{{ apache_package_name }}"
+        - "{{ php_package_name }}"   
       state: latest
-    when: ansible_distribution == "Ubuntu"
-
-  - name: installation of apache and php packages on Centos
-    tags: apache2,centos,php
-    dnf:
-      name:
-        - httpd
-        - php
-      state: latest
-    when: ansible_distribution == "Amazon"
 
   - name: started httpd (Centos)
     tags: apache2,centos,php
-    service:
-      name: httpd
+    service: 
+      name: "{{ apache_service }}"
       state: started
-      enabled: true
-    when: ansible_distribution == "Amazon"
+      enabled: yes
 
-  - name: Copying of default.html to web server
-    tags: html,copy
-    copy:
-      src: default-site.html
-      dest: /var/www/html/index.html
-      owner: root
-      group: root
-      mode: 0644
-  - name: Changing Email in httpd
+  - name: change email address for admin
     tags: apache2,centos,php
     lineinfile:
       path: /etc/httpd/conf/httpd.conf
@@ -47,4 +28,13 @@
       name: httpd
       state: restarted
     when: httpd.changed
+
+  - name: Copying of default.html to web server
+    tags: html,copy
+    copy:
+      src: default-site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
 
