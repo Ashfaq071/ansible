@@ -18,16 +18,9 @@
     lineinfile:
       path: /etc/httpd/conf/httpd.conf
       regexp: '^ServerAdmin'
-      line: ServerAdmin khan@testing.com
+      line: ServerAdmin khan@testing.org
     when: ansible_distribution == "Amazon"
-    register: httpd
-
-  - name: Restart httpd (Centos)
-    tags: apache2,centos,php
-    service:
-      name: httpd
-      state: restarted
-    when: httpd.changed
+    notify: apache_restart
 
   - name: Copying of default.html to web server
     tags: html,copy
